@@ -1,0 +1,38 @@
+#Data related things
+MARTINEZALF_01_Sample_Stats.pdf
+MARTINEZALF_01.*
+Marker_*
+README
+Analysis/input/*
+
+#General
+__pycache__
+
+#gitignore in the Preprocessing folder
+Preprocessing/.*
+Preprocessing/data
+Preprocessing/results/*/*
+!Preprocessing/results/*/.gitkeep
+Preprocessing/auxiliar/*
+!Preprocessing/auxiliar/.gitkeep
+Preprocessing/gtfparse
+Preprocessing/matio
+Preprocessing/nohup.out
+Preprocessing/np
+Preprocessing/os
+Preprocessing/pd
+Preprocessing/pysam
+Preprocessing/sprs
+
+#gitignore in the Analysis folder
+!Analysis/input/.gitkeep
+Analysis/.*
+Analysis/results/*
+!Analysis/results/.gitkeep
+Analysis/plots/*
+!Analysis/plots/.gitkeep
+Analysis/results/*
+!Analysis/results/.gitkeep
+Analysis/tables/*
+!Analysis/tables/.gitkeep
+Analysis/write

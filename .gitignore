@@ -1,9 +1,11 @@
-#Data related things
+#Data related things that may exist in the final version
 MARTINEZALF_01_Sample_Stats.pdf
 MARTINEZALF_01.*
 Marker_*
 README
 Analysis/input/*
+Analysis/cytoscape/plots/*
+Analysis/cytoscape/data.json
 
 #General
 __pycache__

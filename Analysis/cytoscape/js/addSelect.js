@@ -18,7 +18,7 @@ function loadStages() {
 // funcion para Cargar Provincias al campo <select>
 function loadColorCodes() {
 
-    let array = ['stage','T', 'Nkx2-5', 'Tbx5', 'Kdr', 'Pecam1', 'Cdh5', 'Cd34', 'Ptprc',
+    let array = ['stageInt','T', 'Nkx2-5', 'Tbx5', 'Kdr', 'Pecam1', 'Cdh5', 'Cd34', 'Ptprc',
     'Kit', 'Ly6a', 'Ly6e', 'Itga2b', 'Spn', 'Flt3', 'Fcgr3', 'Slamf1',
     'Cd48', 'Esam', 'Notch2', 'Cd93', 'Robo4', 'Ifitm1', 'Ifitm2',
     'Ifitm3', 'Ccn3', 'Etv6', 'Runx1', 'Gata2', 'Meis1', 'Hoxb4',

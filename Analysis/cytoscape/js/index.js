@@ -10,7 +10,7 @@ function rotate() {
   setTimeout(function (){ 
     cy.nodes().positions(
       function( i, node ){ 
-        return { x: node.position('y')*3, y: -1*node.position('x')*1.1
+        return { x: node.position('y')*1.5, y: -1*node.position('x')*1.1
       }; 
   }); 
   cy.fit() 
@@ -30,11 +30,11 @@ function rotate() {
     let cy;
 
     let $dataset = $('#data');
-    let getDataset = name => fetch(`${name}.json`).then( toJson );
+    let getDataset = name => fetch(`data/${name}/time_reconstruction.json`).then( toJson );
     let applyDataset = dataset => {
       // so new eles are offscreen
-      // cy.zoom(0.001);
-      // cy.pan({ x: -9999999, y: -9999999 });
+      cy.zoom(0.001);
+      cy.pan({ x:-9999999, y: -9999999 });
 
       // replace eles
       cy.elements().remove();
@@ -52,8 +52,8 @@ function rotate() {
 
       cy.style().fromJson( stylesheet ).update();
 
-      if ($color.value == "stage"){
-        c = "mapData("+$color.value+",6.5,8.5,blue,red)"
+      if ($color.value == "stageInt"){
+        c = "mapData("+$color.value+",0,5,blue,red)"
       }else{
         c = "mapData("+$color.value+",0,1,blue,red)"
       }
@@ -61,7 +61,7 @@ function rotate() {
 
       plotLayout["title"]["text"] = $color.value
       let ii = 0;
-      for (let i = 0; i < 9; i++){
+      for (let i = 0; i < 5; i++){
         if (xLabels[i] != "notSet"){
           ii = xNodeId[i];
           y[i] = cy.getElementById(ii).data($color.value)  
@@ -144,7 +144,20 @@ function rotate() {
       let stage = node.cyTarget.data("stage");
       document.getElementById('cluster').innerHTML = "<b>Cluster: </b>"+cluster;
       document.getElementById('annotation').innerHTML = "<b>Annotation: </b>"+annotation;
-      document.getElementById('stage').innerHTML = "<b>Stage: </b>E"+stage;
+      document.getElementById('stage').innerHTML = "<b>Stage: </b>"+stage;
+      document.getElementById('weight').innerHTML = "<b>Weight: - </b>";
+    });
+    cy.bind('mouseover', 'edge', function(edge) {
+      Promise.resolve($tracing)
+      Promise.resolve($weights)
+      let source = edge.cyTarget.data("source");
+      let target = edge.cyTarget.data("target");
+      let stage = edge.cyTarget.data("stage");
+      let weight = edge.cyTarget.data("weightForward");
+      document.getElementById('cluster').innerHTML = "<b>Cluster: - </b>";
+      document.getElementById('annotation').innerHTML = "<b>Annotation: - </b>";
+      document.getElementById('stage').innerHTML = "<b>Stage: - </b>" ;
+      document.getElementById('weight').innerHTML = "<b>Weight: </b>"+weight;
     });
     cy.bind('click', 'node', function(node) {
       Promise.resolve($tracing)
@@ -179,6 +192,7 @@ function rotate() {
           xLabels[node.cyTarget.data("stageInt")] = node.cyTarget.data("cluster")+" "+node.cyTarget.data("annotation")
           xNodeId[node.cyTarget.data("stageInt")] = node.cyTarget.data("id")
           Plotly.newPlot('myDiv', plotData, plotLayout);
+          console.log(y)
         }
     });
     cy.bind('cxttap', 'node', function(node) {
@@ -236,7 +250,7 @@ function rotate() {
       title:{text: $color.value, font:{size:20}},
       xaxis:{
         tickmode: "array",
-        tickvals: [1,2,3,4,5,6,7,8,9],
+        tickvals: [1,2,3,4,5],
         ticktext: xLabels,
       },
       margin:{l:30,r:30,t:40}
@@ -251,12 +265,10 @@ function rotate() {
       Promise.resolve($color.value)
       Promise.resolve($cluster.value)
 
-      console.log($color.value)
-
-      let m = "plots/UMAP_"+$stage.value+".json"
+      let m = "data/"+$dataset.value+"/UMAP_"+$stage.value+".json"
 
       if ($stage.value == ""){ //Initialise option
-        m = "plots/UMAP_120hr.json"
+        m = "data/"+$dataset.value+"/UMAP_120hr.json"
       }
 
       return m

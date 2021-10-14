@@ -4,7 +4,7 @@ MARTINEZALF_01.*
 Marker_*
 README
 Analysis/input/*
-Analysis/cytoscape/plots/*
+Analysis/cytoscape/data/*
 Analysis/cytoscape/data.json
 
 #General

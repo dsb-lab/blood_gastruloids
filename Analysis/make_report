@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir report
+mkdir report/with_code
+mkdir report/without_code
+
+jupyter nbconvert --to html --no-input *
+mv *.html report/without_code
+
+jupyter nbconvert --to html *
+mv *.html report/with_code

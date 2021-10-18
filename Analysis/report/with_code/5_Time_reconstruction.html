@@ -13075,35 +13075,68 @@ div#notebook {
     });
     </script>
     <!-- End of mathjax configuration --></head>
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/main.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js"></script>
+
+<script>
+$( document ).ready(function(){
+
+            var cfg = {};
+
+            // fire the main function with these parameters
+            require(['nbextensions/toc2/toc2'], function (toc2) {
+                toc2.table_of_contents(cfg);
+            });
+    });
+</script>
 <body>
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this notebook, we make explicit the relationship between the clusters and the time of creation.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[237]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">scp</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">scp</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">bbknn</span>
-<span class="kn">import</span> <span class="nn">igraph</span>
-<span class="kn">import</span> <span class="nn">json</span>
-
-<span class="kn">from</span> <span class="nn">parameters</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid.inset_locator</span> <span class="kn">import</span> <span class="n">inset_axes</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Global">Global<a class="anchor-link" href="#Global">&#182;</a></h1>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13121,7 +13154,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Causal-connection">Causal connection<a class="anchor-link" href="#Causal-connection">&#182;</a></h1>
+<h2 id="UMAP-with-time-projections">UMAP with time projections<a class="anchor-link" href="#UMAP-with-time-projections">&#182;</a></h2><p>We project our data of each time point over the whole structure.</p>
+
 </div>
 </div>
 </div>
@@ -13130,103 +13164,16 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bbknn</span><span class="o">.</span><span class="n">bbknn</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span><span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="n">n_pcs</span><span class="o">=</span><span class="n">PCA</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="n">METRIC</span><span class="p">,</span><span class="n">neighbors_within_batch</span><span class="o">=</span><span class="n">KNN</span><span class="p">,</span><span class="n">use_annoy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[173]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">make_edges</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">key_stages</span><span class="p">,</span><span class="n">key_clusters</span><span class="p">,</span><span class="n">stages</span><span class="p">):</span>
-
-    <span class="c1">#Make causal edge list</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;In&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;neighbors&quot;</span><span class="p">][</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Out&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;neighbors&quot;</span><span class="p">][</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;neighbors&quot;</span><span class="p">][</span><span class="s2">&quot;distances&quot;</span><span class="p">][</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;In&quot;</span><span class="p">],</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Out&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;neighbors&quot;</span><span class="p">][</span><span class="s2">&quot;connectivities&quot;</span><span class="p">][</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;In&quot;</span><span class="p">],</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Out&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;In&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">key_stages</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageOut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Out&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">key_stages</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;In&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">key_clusters</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Out&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">key_clusters</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Stage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageIn&quot;</span><span class="p">],</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageOut&quot;</span><span class="p">])]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">],</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">])]</span>
-
-    <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">stageIn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stages</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">stageOut</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stages</span><span class="p">):</span>
-
-            <span class="n">o0</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-            
-            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">o0</span><span class="p">:</span>
-                
-                <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Stage&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="n">stageIn</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stageOut</span><span class="p">),:]</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">hue</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">],</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
     
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageIn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageOut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;StageOut&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
-    
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Forward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">stageIn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stages</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">stageOut</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stages</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]):</span>
-
-                <span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Stage&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">stageIn</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stageOut</span><span class="p">),</span><span class="s2">&quot;Forward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                
-    <span class="c1">#Filter edges</span>
-    <span class="c1">#Hard threshold</span>
-    
-    <span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Forward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">,</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
-    <span class="n">s2</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Forward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;ClusterOut&quot;</span><span class="p">,</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
-
-    <span class="n">sIn</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-    <span class="n">sIn</span> <span class="o">=</span> <span class="n">sIn</span><span class="o">/</span><span class="n">sIn</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">sIn</span> <span class="o">=</span> <span class="n">sIn</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-
-    <span class="n">sIn</span> <span class="o">=</span> <span class="n">sIn</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="n">sOut</span> <span class="o">=</span> <span class="n">s2</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-    <span class="n">sOut</span> <span class="o">=</span> <span class="n">sOut</span><span class="o">/</span><span class="n">sOut</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">sOut</span> <span class="o">=</span> <span class="n">sOut</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-
-    <span class="n">sOut</span> <span class="o">=</span> <span class="n">sOut</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;edges&quot;</span><span class="p">:</span><span class="n">m</span><span class="p">,</span><span class="s2">&quot;forward&quot;</span><span class="p">:</span><span class="n">sIn</span><span class="p">,</span><span class="s2">&quot;backward&quot;</span><span class="p">:</span><span class="n">sOut</span><span class="p">,</span><span class="s2">&quot;stage-cluster&quot;</span><span class="p">:</span><span class="n">m</span><span class="p">[[</span><span class="s2">&quot;StageIn&quot;</span><span class="p">,</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;ClusterIn&quot;</span><span class="p">)}</span>    
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[174]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">make_edges</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[244]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-
-<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">],</span><span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/global/UMAP_sep_times.png&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13239,27 +13186,13 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[244]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&lt;AxesSubplot:xlabel=&#39;ClusterOut&#39;, ylabel=&#39;ClusterIn&#39;&gt;</pre>
-</div>
-
-</div>
-
-<div class="output_area">
-
     <div class="prompt"></div>
 
 
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_5_0.png"
 >
 </div>
 
@@ -13272,110 +13205,17 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Making-the-database">Making the database<a class="anchor-link" href="#Making-the-database">&#182;</a></h1>
+<h2 id="Cluster-relationship">Cluster relationship<a class="anchor-link" href="#Cluster-relationship">&#182;</a></h2><p>We connect the clusters using the PAGA algorithm and show the time contribution to each clusters in a pie plot overlayed over the UMAP plot.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[234]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">make_temporal_graph_database</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">edges</span><span class="p">,</span><span class="n">savefolder</span><span class="p">,</span><span class="n">key_stage</span><span class="p">,</span><span class="n">key_cluster</span><span class="p">,</span><span class="n">stage_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">key_gene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gene_list</span><span class="o">=</span><span class="p">[],</span><span class="n">key_annotation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    
-    <span class="c1">#Make graph</span>
-    <span class="n">ss</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="s2">&quot;backward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">+</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">&gt;</span><span class="mi">0</span>
-    <span class="n">g</span> <span class="o">=</span> <span class="n">igraph</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">Adjacency</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">vs</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="s2">&quot;backward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">vs</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;stage-cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot;StageIn&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">[</span><span class="s2">&quot;backward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">key_annotation</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">key_annotation</span> <span class="o">=</span> <span class="n">key_cluster</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">vs</span><span class="p">[</span><span class="s2">&quot;annotation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_cluster</span><span class="p">]</span><span class="o">==</span><span class="n">j</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span><span class="n">key_annotation</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">vs</span><span class="p">]</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">es</span><span class="p">[</span><span class="s2">&quot;weightForward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">get_edgelist</span><span class="p">()]</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">es</span><span class="p">[</span><span class="s2">&quot;weightBackward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;backward&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">get_edgelist</span><span class="p">()]</span>
-
-    <span class="k">if</span> <span class="n">stage_order</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">stage_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_stage</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
-        
-    <span class="n">stageInt</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stage_order</span><span class="p">)}</span>
-    
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">vs</span><span class="p">):</span>
-        
-        <span class="n">data_prop</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;n_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-            <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;annotation&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="s2">&quot;annotation&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;stageInt&quot;</span><span class="p">:</span> <span class="n">stageInt</span><span class="p">[</span><span class="n">n</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">]]</span>
-          <span class="p">}</span>
-
-        <span class="k">if</span> <span class="n">key_gene</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span><span class="p">:</span>
-                <span class="n">data_prop</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_cluster</span><span class="p">]</span><span class="o">==</span><span class="n">n</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">key_gene</span><span class="p">]</span><span class="o">==</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-                <span class="n">l</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_cluster</span><span class="p">]</span><span class="o">==</span><span class="n">n</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">],</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">key_gene</span><span class="p">]</span><span class="o">==</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-                    <span class="n">data_prop</span><span class="p">[</span><span class="n">gene</span><span class="o">+</span><span class="s2">&quot;_std&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">data_prop</span><span class="p">[</span><span class="n">gene</span><span class="o">+</span><span class="s2">&quot;_std&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span>
-
-        <span class="n">node</span> <span class="o">=</span> <span class="p">{</span>
-          <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data_prop</span><span class="p">}</span>
-
-        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">es</span><span class="p">):</span>
-
-        <span class="n">edge</span> <span class="o">=</span> <span class="p">{</span>
-          <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;e_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;n_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">source</span><span class="p">),</span>
-            <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;n_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
-            <span class="s2">&quot;weightForward&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="s2">&quot;weightForward&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;weightBackward&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">[</span><span class="s2">&quot;weightBackward&quot;</span><span class="p">]</span>
-          <span class="p">}}</span>
-
-        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">savefolder</span><span class="o">+</span><span class="s2">&quot;/time_reconstruction.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>       
-            
-    <span class="k">return</span> 
-
-<span class="k">def</span> <span class="nf">make_umap_plots_database</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">savefolder</span><span class="p">,</span><span class="n">key_stage</span><span class="p">,</span><span class="n">key_cluster</span><span class="p">,</span><span class="n">key_plot</span><span class="o">=</span><span class="s2">&quot;X_umap&quot;</span><span class="p">,</span><span class="n">stage_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">key_gene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gene_list</span><span class="o">=</span><span class="p">[]):</span>
-    
-    <span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="n">key_plot</span><span class="p">]</span>
-        
-    <span class="n">stage</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_stage</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Adata must have just one &quot;</span><span class="o">+</span><span class="n">key_stage</span><span class="o">+</span><span class="s2">&quot; value&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">stage</span> <span class="o">=</span> <span class="n">stage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]],</span>
-        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]],</span>
-        <span class="p">}</span>
-
-    <span class="c1">#data[&quot;cluster_None&quot;] = [5 for k in adata.obs[key_cluster]==i]</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_cluster</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">cluster</span> <span class="o">=</span> <span class="s2">&quot;cluster_&quot;</span><span class="o">+</span><span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="mi">5</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_cluster</span><span class="p">]</span><span class="o">==</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">key_gene</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">gene_list</span><span class="p">:</span>
-            <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adata</span><span class="p">[:,</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">key_gene</span><span class="p">]</span><span class="o">==</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
-            <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]]</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">savefolder</span><span class="o">+</span><span class="s2">&quot;/UMAP_&quot;</span><span class="o">+</span><span class="n">stage</span><span class="o">+</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
-            
-    <span class="k">return</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scp</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">paga</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">groups</span><span class="o">=</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13385,38 +13225,43 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[208]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">genes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;Marker_genes_scRNAseq_Gx.xlsx&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;paga&quot;</span><span class="p">][</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
 
-    </div>
-</div>
-</div>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<span class="c1"># Plots</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span><span class="n">hue</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">])</span>
+<span class="c1"># Line weights</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[209]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">make_temporal_graph_database</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">edges</span><span class="p">,</span><span class="s2">&quot;cytoscape/data/blood&quot;</span><span class="p">,</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span><span class="n">key_gene</span><span class="o">=</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span><span class="n">gene_list</span><span class="o">=</span><span class="n">genes</span><span class="p">)</span>
-</pre></div>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">subax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">([(</span><span class="n">x1</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="mf">1.1</span><span class="p">,(</span><span class="n">y1</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">])</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[235]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-    <span class="n">adataAux</span> <span class="o">=</span> <span class="n">scp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;results/dimensional_reduction_&quot;</span><span class="o">+</span><span class="n">time</span><span class="o">+</span><span class="s2">&quot;.h5ad&quot;</span><span class="p">)</span>
-    <span class="n">make_umap_plots_database</span><span class="p">(</span><span class="n">adataAux</span><span class="p">,</span><span class="s2">&quot;cytoscape/data/blood&quot;</span><span class="p">,</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span><span class="n">key_plot</span><span class="o">=</span><span class="s2">&quot;X_umap&quot;</span><span class="p">,</span><span class="n">key_gene</span><span class="o">=</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span><span class="n">gene_list</span><span class="o">=</span><span class="n">genes</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Cell&quot;</span><span class="p">]</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;120hr&quot;</span><span class="p">:</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span><span class="s2">&quot;144hr&quot;</span><span class="p">:</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span><span class="s2">&quot;168hr&quot;</span><span class="p">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;192hr&quot;</span><span class="p">:</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span><span class="s2">&quot;216hr&quot;</span><span class="p">:</span><span class="s2">&quot;black&quot;</span><span class="p">}</span>
+        <span class="n">cat</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">subax</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">subax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="n">origin</span><span class="p">,</span><span class="n">backgroundcolor</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="n">yellow_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;120hr&#39;</span><span class="p">)</span>
+        <span class="n">orange_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;144hr&#39;</span><span class="p">)</span>
+        <span class="n">red_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;168hr&#39;</span><span class="p">)</span>
+        <span class="n">purple_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;192hr&#39;</span><span class="p">)</span>
+        <span class="n">black_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;216hr&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Pie&quot;</span><span class="p">,</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">title_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">yellow_patch</span><span class="p">,</span><span class="n">orange_patch</span><span class="p">,</span><span class="n">red_patch</span><span class="p">,</span><span class="n">purple_patch</span><span class="p">,</span><span class="n">black_patch</span><span class="p">])</span>
+        
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/global/Clusters_connected_global.png&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13432,19 +13277,430 @@ div#notebook {
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;120hr&#39;]
-Categories (1, object): [&#39;120hr&#39;]
-[&#39;192hr&#39;]
-Categories (1, object): [&#39;192hr&#39;]
-[&#39;216hr&#39;]
-Categories (1, object): [&#39;216hr&#39;]
-[&#39;144hr&#39;]
-Categories (1, object): [&#39;144hr&#39;]
-[&#39;168hr&#39;]
-Categories (1, object): [&#39;168hr&#39;]
+
+
+<div class="output_png output_subarea ">
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_8_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Time-causality">Time causality<a class="anchor-link" href="#Time-causality">&#182;</a></h2><p>For each cluster of the data, we split it in subclusters by time contributions and connect each subclusters through PAGA algorithm maintaining only the connections between neighbour time points and at all time points between whole gastruloid measures (at 144 and 192 hours). This makes explicit the causal connection between clusters between time points and keeps cluster connection between clusters that may not exits at all times because of sorting.</p>
+<p>The plot is normalized so the sum of the clusters (rows sum up to one), to make explicit the contribution at each time.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scp</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">paga</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">groups</span><span class="o">=</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>... storing &#39;leiden_global_time&#39; as categorical
 </pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">,</span><span class="s2">&quot;Time&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1">#data</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="n">weight</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;paga&quot;</span><span class="p">][</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+
+<span class="n">xx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;120hr&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;144hr&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;168hr&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;192hr&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;216hr&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">)[</span><span class="nb">int</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">)[</span><span class="nb">int</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+        
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">x1</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">x2</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">x1</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">x2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-.&quot;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=-</span><span class="mi">3</span><span class="p">)</span>
+            
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2000</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Size&quot;</span><span class="p">,</span><span class="n">title_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cluster&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/global/Clusters_reconstructed_by_times.png&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_13_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Sorted">Sorted<a class="anchor-link" href="#Sorted">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">scp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;results/subSamples/sorted/sorted.h5ad&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="UMAP-with-time-projections">UMAP with time projections<a class="anchor-link" href="#UMAP-with-time-projections">&#182;</a></h2><p>We project our data of each time point over the whole structure.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">hue</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">],</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/sorted/UMAP_sep_times.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_17_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cluster-relationship">Cluster relationship<a class="anchor-link" href="#Cluster-relationship">&#182;</a></h2><p>We connect the clusters using the PAGA algorithm and show the time contribution to each clusters in a pie plot overlayed over the UMAP plot.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scp</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">paga</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">groups</span><span class="o">=</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;paga&quot;</span><span class="p">][</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<span class="c1"># Plots</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span><span class="n">hue</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">])</span>
+<span class="c1"># Line weights</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">xmin</span><span class="p">,</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xmax</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">subax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">([(</span><span class="n">x1</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="mf">1.1</span><span class="p">,(</span><span class="n">y1</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">,</span><span class="mf">.1</span><span class="p">])</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">origin</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Cell&quot;</span><span class="p">]</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;120hr&quot;</span><span class="p">:</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span><span class="s2">&quot;144hr&quot;</span><span class="p">:</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span><span class="s2">&quot;168hr&quot;</span><span class="p">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;192hr&quot;</span><span class="p">:</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span><span class="s2">&quot;216hr&quot;</span><span class="p">:</span><span class="s2">&quot;black&quot;</span><span class="p">}</span>
+        <span class="n">cat</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">subax</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">subax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="n">origin</span><span class="p">,</span><span class="n">backgroundcolor</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="n">yellow_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;120hr&#39;</span><span class="p">)</span>
+        <span class="n">orange_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;144hr&#39;</span><span class="p">)</span>
+        <span class="n">red_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;168hr&#39;</span><span class="p">)</span>
+        <span class="n">purple_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;192hr&#39;</span><span class="p">)</span>
+        <span class="n">black_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;216hr&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Pie&quot;</span><span class="p">,</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">title_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">yellow_patch</span><span class="p">,</span><span class="n">orange_patch</span><span class="p">,</span><span class="n">red_patch</span><span class="p">,</span><span class="n">purple_patch</span><span class="p">,</span><span class="n">black_patch</span><span class="p">])</span>
+        
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/sorted/Clusters_connected_global.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_20_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Time-causality">Time causality<a class="anchor-link" href="#Time-causality">&#182;</a></h2><p>For each cluster of the data, we split it in subclusters by time contributions and connect each subclusters through PAGA algorithm maintaining only the connections between neighbour time points and at all time points between whole gastruloid measures (at 144 and 192 hours). This makes explicit the causal connection between clusters between time points and keeps cluster connection between clusters that may not exits at all times because of sorting.</p>
+<p>The plot is normalized so the sum of the clusters (rows sum up to one), to make explicit the contribution at each time.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scp</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">paga</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">groups</span><span class="o">=</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>... storing &#39;leiden_global_time&#39; as categorical
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">,</span><span class="s2">&quot;Time&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1">#data</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="n">weight</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;paga&quot;</span><span class="p">][</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+
+<span class="n">xx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;144hr&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;192hr&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;216hr&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">origin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden_global_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">)[</span><span class="nb">int</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">)[</span><span class="nb">int</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+        
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">x1</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">x2</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">x1</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">x2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">],[</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-.&quot;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=-</span><span class="mi">3</span><span class="p">)</span>
+            
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;leiden_global&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2000</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Size&quot;</span><span class="p">,</span><span class="n">title_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cluster&quot;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;plots/sorted/Clusters_reconstructed_by_times.png&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="5_Time_reconstruction_files/5_Time_reconstruction_25_0.png"
+>
+</div>
+
 </div>
 
 </div>

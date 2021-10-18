@@ -13075,13 +13075,32 @@ div#notebook {
     });
     </script>
     <!-- End of mathjax configuration --></head>
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/main.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js"></script>
+
+<script>
+$( document ).ready(function(){
+
+            var cfg = {};
+
+            // fire the main function with these parameters
+            require(['nbextensions/toc2/toc2'], function (toc2) {
+                toc2.table_of_contents(cfg);
+            });
+    });
+</script>
 <body>
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13094,10 +13113,13 @@ div#notebook {
 <div class="cell border-box-sizing code_cell rendered">
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Merging-lanes">Merging lanes<a class="anchor-link" href="#Merging-lanes">&#182;</a></h1><p>In the preprocessing step, we aligned the files taking the different lanes as separated measures, however, these measures corrrespond to the cells. In this step, we unified the measures coming from different lanes measures coming from a unique well.</p>
+<h1 id="Merging-lanes-">Merging lanes <a name="Merging" /><a class="anchor-link" href="#Merging-lanes-">&#182;</a></h1><p>In the preprocessing step, we aligned the files taking the different lanes as separated measures, however, these measures corrrespond to the cells. In this step, we unified the measures coming from different lanes measures coming from a unique well.</p>
 
 </div>
 </div>
@@ -13122,7 +13144,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Standarize-the-tags">Standarize the tags<a class="anchor-link" href="#Standarize-the-tags">&#182;</a></h1><p>We can check that in the raw data some tags have the same meaning but different nomenclature because of how they where given to the sequencing facility. We standarize the nomenclature.</p>
+<h1 id="Standarize-the-tags-">Standarize the tags <a name="Standarize" /><a class="anchor-link" href="#Standarize-the-tags-">&#182;</a></h1><p>We can check that in the raw data some tags have the same meaning but different nomenclature because of how they where given to the sequencing facility. We standarize the nomenclature.</p>
 <ol>
 <li>kitScal and kitscal in Condition</li>
 <li>empty and EMPTY in BiologicalSample</li>
@@ -13139,7 +13161,8 @@ div#notebook {
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Time :  [&#39;120hr&#39; &#39;192hr&#39; &#39;216hr&#39; &#39;144hr&#39; &#39;168hr&#39;]
+<pre>Plate :  [&#39;P1&#39; &#39;P6&#39; &#39;P7&#39; &#39;P8&#39; &#39;P9&#39; &#39;P2&#39; &#39;P4&#39; &#39;P3&#39; &#39;P5&#39;]
+Time :  [&#39;120hr&#39; &#39;192hr&#39; &#39;216hr&#39; &#39;144hr&#39; &#39;168hr&#39;]
 Condition :  [&#39;whole&#39; &#39;CD45&#39; &#39;kitscal&#39; &#39;kitScal&#39; &#39;CD41&#39;]
 BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &#39;black&#39;]
 </pre>
@@ -13189,6 +13212,7 @@ BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &
     <tr style="text-align: right;">
       <th></th>
       <th>Cell</th>
+      <th>Plate</th>
       <th>Time</th>
       <th>Condition</th>
       <th>BiologicalSample</th>
@@ -13198,6 +13222,7 @@ BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &
     <tr>
       <th>583</th>
       <td>HG72GDRXY_IDT-DUI-NXT-198</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>black</td>
@@ -13205,6 +13230,7 @@ BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &
     <tr>
       <th>598</th>
       <td>HG72GDRXY_IDT-DUI-NXT-210</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>black</td>
@@ -13212,6 +13238,7 @@ BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &
     <tr>
       <th>611</th>
       <td>HG72GDRXY_IDT-DUI-NXT-222</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>black</td>
@@ -13230,15 +13257,12 @@ BiologicalSample :  [&#39;P1&#39; &#39;P2&#39; &#39;empty&#39; &#39;EMPTY&#39; &
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Adding-Flow-cytommetry-measures-to-data">Adding Flow cytommetry measures to data<a class="anchor-link" href="#Adding-Flow-cytommetry-measures-to-data">&#182;</a></h1><p>For this experimental setup, the data has been sorted to enrich for rare cells. We add the measures of the cells to the available information of the system.</p>
+<h1 id="Adding-Flow-cytommetry-measures-to-data-">Adding Flow cytommetry measures to data <a name="Add_flow" /><a class="anchor-link" href="#Adding-Flow-cytommetry-measures-to-data-">&#182;</a></h1><p>For this experimental setup, the data has been sorted to enrich for rare cells. We add the measures of the cells to the available information of the system.</p>
 <p>We check that there are wells that have flow information but there are not corresponding RNA sequenced measures.</p>
 <p>Additionally we confirm that some wells were measured more than once indicating that the well contains doublets, this where marked already by the tag <strong>black</strong> in biological condition.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 
@@ -13301,6 +13325,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr style="text-align: right;">
       <th></th>
       <th>Cell</th>
+      <th>Plate</th>
       <th>Time</th>
       <th>Condition</th>
       <th>BiologicalSample</th>
@@ -13324,6 +13349,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>89</th>
       <td>HG3JFDRXY_IDT-DUI-NXT-282</td>
+      <td>P1</td>
       <td>120hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13345,6 +13371,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>95</th>
       <td>HG3JFDRXY_IDT-DUI-NXT-288</td>
+      <td>P1</td>
       <td>120hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13366,6 +13393,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>192</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-186</td>
+      <td>P7</td>
       <td>192hr</td>
       <td>CD45</td>
       <td>empty</td>
@@ -13387,6 +13415,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>199</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-192</td>
+      <td>P7</td>
       <td>192hr</td>
       <td>CD45</td>
       <td>empty</td>
@@ -13408,6 +13437,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>299</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-282</td>
+      <td>P8</td>
       <td>192hr</td>
       <td>kitScal</td>
       <td>empty</td>
@@ -13429,6 +13459,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>305</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-288</td>
+      <td>P8</td>
       <td>192hr</td>
       <td>kitScal</td>
       <td>empty</td>
@@ -13450,6 +13481,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>400</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-378</td>
+      <td>P9</td>
       <td>216hr</td>
       <td>CD45</td>
       <td>empty</td>
@@ -13471,6 +13503,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>407</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-384</td>
+      <td>P9</td>
       <td>216hr</td>
       <td>CD45</td>
       <td>empty</td>
@@ -13492,6 +13525,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>465</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-90</td>
+      <td>P6</td>
       <td>192hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13513,6 +13547,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>471</th>
       <td>HG5V7DRXY_IDT-DUI-NXT-96</td>
+      <td>P6</td>
       <td>192hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13534,6 +13569,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>570</th>
       <td>HG72GDRXY_IDT-DUI-NXT-186</td>
+      <td>P4</td>
       <td>144hr</td>
       <td>kitScal</td>
       <td>empty</td>
@@ -13555,6 +13591,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>577</th>
       <td>HG72GDRXY_IDT-DUI-NXT-192</td>
+      <td>P4</td>
       <td>144hr</td>
       <td>kitScal</td>
       <td>empty</td>
@@ -13576,6 +13613,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>625</th>
       <td>HG72GDRXY_IDT-DUI-NXT-235</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>P2</td>
@@ -13597,6 +13635,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>677</th>
       <td>HG72GDRXY_IDT-DUI-NXT-282</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>empty</td>
@@ -13618,6 +13657,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>683</th>
       <td>HG72GDRXY_IDT-DUI-NXT-288</td>
+      <td>P3</td>
       <td>144hr</td>
       <td>CD41</td>
       <td>empty</td>
@@ -13639,6 +13679,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>684</th>
       <td>HG72GDRXY_IDT-DUI-NXT-289</td>
+      <td>P5</td>
       <td>168hr</td>
       <td>whole</td>
       <td>P1</td>
@@ -13660,6 +13701,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>790</th>
       <td>HG72GDRXY_IDT-DUI-NXT-384</td>
+      <td>P5</td>
       <td>168hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13681,6 +13723,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>848</th>
       <td>HG72GDRXY_IDT-DUI-NXT-90</td>
+      <td>P2</td>
       <td>144hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13702,6 +13745,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
     <tr>
       <th>854</th>
       <td>HG72GDRXY_IDT-DUI-NXT-96</td>
+      <td>P2</td>
       <td>144hr</td>
       <td>whole</td>
       <td>empty</td>
@@ -13734,7 +13778,7 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Statistics,-create-Annotated-data-file-and-save">Statistics, create Annotated data file and save<a class="anchor-link" href="#Statistics,-create-Annotated-data-file-and-save">&#182;</a></h1><p>We will save the data of the files with non-zero RNA sample measures but we will keep those measures that contain doublets and empty well for now so they appear in the QC check.</p>
+<h1 id="Statistics,-create-Annotated-data-file-and-save-">Statistics, create Annotated data file and save <a name="Statistics" /><a class="anchor-link" href="#Statistics,-create-Annotated-data-file-and-save-">&#182;</a></h1><p>We will save the data of the files with non-zero RNA sample measures but we will keep those measures that contain doublets and empty well for now so they appear in the QC check.</p>
 
 </div>
 </div>
@@ -13811,6 +13855,28 @@ P9_216hr_CD45   H5  does not have scRNA data. Reading error.
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>... storing &#39;Plate&#39; as categorical
+... storing &#39;Time&#39; as categorical
+... storing &#39;Condition&#39; as categorical
+... storing &#39;BiologicalSample&#39; as categorical
+... storing &#39;Flow Cytommetry File&#39; as categorical
+... storing &#39;gene_name&#39; as categorical
+</pre>
+</div>
+</div>
+
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">

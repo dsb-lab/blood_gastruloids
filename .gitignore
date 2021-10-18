@@ -38,3 +38,5 @@ Analysis/results/*
 Analysis/tables/*
 !Analysis/tables/.gitkeep
 Analysis/write
+Analysis/report
+make_report

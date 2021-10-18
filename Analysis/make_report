@@ -3,9 +3,13 @@
 mkdir report
 mkdir report/with_code
 mkdir report/without_code
+rm -r report/with_code/*
+rm -r report/without_code/*
 
-jupyter nbconvert --to html --no-input *
+jupyter nbconvert --to html_toc --no-input *.ipynb
 mv *.html report/without_code
+mv *_files report/without_code
 
-jupyter nbconvert --to html *
+jupyter nbconvert --to html_toc *.ipynb
 mv *.html report/with_code
+mv *_files report/with_code

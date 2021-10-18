@@ -32,6 +32,7 @@ geneData.to_csv("results/5_counts/Genes.csv")
 print("Making cell matrix")
 cellDataAux = pd.read_csv("../MARTINEZALF_01.csv",sep="\t",skiprows=2)
 cellData = pd.DataFrame()
+cellData["Plate"] = [i.split("_")[0] for i in cellDataAux["SAMPLE NAME"]]
 cellData["Cell"] = cellDataAux["NAME"]
 cellData["Time"] = [i.split("_")[1] for i in cellDataAux["SAMPLE NAME"]]
 cellData["Condition"] = [i.split("_")[2] for i in cellDataAux["SAMPLE NAME"]]

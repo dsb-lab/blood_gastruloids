@@ -10,4 +10,4 @@ docker run --rm \
            --name single_cell_analysis \
            --mount type=bind,source=$PATHIN,destination=/home/jovyan \
            -e JUPYTER_ENABLE_LAB=yes \
-           dsblab/single_cell_analysis:0.1
+           dsblab/single_cell_analysis:0.2-light

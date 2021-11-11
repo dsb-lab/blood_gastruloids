@@ -39,5 +39,4 @@ Analysis/tables/*
 !Analysis/tables/.gitkeep
 Analysis/write
 Analysis/report.zip
-Analysis/report
 Analysis/make_report

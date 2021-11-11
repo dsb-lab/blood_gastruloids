@@ -13,3 +13,5 @@ mv *_files report/without_code
 jupyter nbconvert --to html_toc *.ipynb
 mv *.html report/with_code
 mv *_files report/with_code
+
+zip -r report plots tables report

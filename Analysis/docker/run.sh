@@ -3,7 +3,7 @@
 PATHIN="$(pwd)"
 
 #Channel of the localhost browser where to show the jupyterlab session
-CHANNEL=8888
+CHANNEL=8889
 
 docker run --rm \
            -p $CHANNEL:8888 \

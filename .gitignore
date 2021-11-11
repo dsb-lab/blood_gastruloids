@@ -40,4 +40,4 @@ Analysis/tables/*
 Analysis/write
 Analysis/report.zip
 Analysis/report
-make_report
+Analysis/make_report

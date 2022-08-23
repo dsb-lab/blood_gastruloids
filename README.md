@@ -18,9 +18,8 @@ Files containing all the analysis of the single cell blood gastruloids.
     - **Marker_genes_scRNAseq_Gx.csv**: File with a list of genes to plot.
  - **single_cell_tools**: copy of python library containing code that is used during the analysis.
  - **Data_other_studies**: Folder with the data used to compare our cells to other studies. Each subfolder contains an study, the bash file to download the data and a jupyter notebook to convert the raw data in our format.
-    - **Fadlullah**: 
-    - **Hadland**:
-    - **Vink**:
+    - [**Fadlullah**](https://pubmed.ncbi.nlm.nih.gov/32402290/): Iterative Single-Cell Analyses Define the Transcriptome of the First Functional Hematopoietic Stem Cells
+    - [**Vink**](https://pubmed.ncbi.nlm.nih.gov/34517413/): Murine AGM single-cell profiling identifies a continuum of hemogenic endothelium differentiation marked by ACE
     - **Plots**: Folder where the auxiliar plots from the other datasets are stored.
     - **Tables**: Folder where the auxiliar tables from the other datasets are stored.
 

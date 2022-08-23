@@ -1,11 +1,18 @@
 #!/bin/bash
 
-read -p "Enter name of analysis (e.g. 1): " NAME
+mkdir Analysis_$1
+mkdir Analysis_$1/Results
 
-mkdir Analysis_$NAME
-mkdir Analysis_$NAME/Results
-mkdir Analysis_$NAME/Tables
-mkdir Analysis_$NAME/Plots
-mkdir Analysis_$NAME/Plots/Enrichr
-mkdir Analysis_$NAME/Plots/UMAP_flow_cytometry
-mkdir Analysis_$NAME/Plots/UMAP_genes
+mkdir Analysis_$1/Plots
+mkdir Analysis_$1/Plots/Global
+mkdir Analysis_$1/Plots/Condition
+mkdir Analysis_$1/Plots/Global/Enrichr
+mkdir Analysis_$1/Plots/Global/UMAP_flow_cytometry
+mkdir Analysis_$1/Plots/Global/UMAP_genes
+mkdir Analysis_$1/Plots/Condition/Enrichr
+mkdir Analysis_$1/Plots/Condition/UMAP_flow_cytometry
+mkdir Analysis_$1/Plots/Condition/UMAP_genes
+
+mkdir Analysis_$1/Tables
+mkdir Analysis_$1/Tables/Global
+mkdir Analysis_$1/Tables/Condition

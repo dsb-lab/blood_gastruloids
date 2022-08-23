@@ -9,12 +9,9 @@
 Data_other_studies/*/*
 !Data_other_studies/Fadlullah/*.ipynb
 !Data_other_studies/Fadlullah/parameters.py
-!Data_other_studies/Fadlullah/Plots/.gitkeep
-!Data_other_studies/Fadlullah/Tables/.gitkeep
 !Data_other_studies/Vink/*.ipynb
 !Data_other_studies/Vink/parameters.py
-!Data_other_studies/Vink/Plots/.gitkeep
-!Data_other_studies/Vink/Tables/.gitkeep
+!Data_other_studies/Vink/genes.txt
 
 Shared_data/HSC_like_markers.tsv
 

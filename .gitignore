@@ -25,6 +25,7 @@ Analysis_2021/*
 !Analysis_2021/6_Projection_Fadlullah*.ipynb
 !Analysis_2021/6_Projection_Vink.ipynb
 !Analysis_2021/setup_analysis.sh
+!Analysis_2021/Data/.gitkeep
 
 Analysis_2022/*
 !Analysis_2022/0*.ipynb
@@ -37,6 +38,7 @@ Analysis_2022/*
 !Analysis_2022/6_Projection_Vink.ipynb
 !Analysis_2022/6_Projection_Analysis.ipynb
 !Analysis_2022/setup_analysis.sh
+!Analysis_2022/Data/.gitkeep
 
 Preprocessing_2021
 Preprocessing_2022

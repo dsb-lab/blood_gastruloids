@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/527982279.svg)](https://zenodo.org/badge/latestdoi/527982279)
+
 # blood_gastruloids
 
 Files containing all the analysis of the single cell blood gastruloids.

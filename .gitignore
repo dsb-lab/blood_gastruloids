@@ -12,6 +12,12 @@ Data_other_studies/*/*
 !Data_other_studies/Vink/*.ipynb
 !Data_other_studies/Vink/parameters.py
 !Data_other_studies/Vink/genes.txt
+!Data_other_studies/Hou/*.ipynb
+!Data_other_studies/Hou/parameters.py
+!Data_other_studies/Zhu/*.ipynb
+!Data_other_studies/Zhu/parameters.py
+!Data_other_studies/Thambyrajah/*.ipynb
+!Data_other_studies/Thambyrajah/parameters.py
 
 Shared_data/HSC_like_markers.tsv
 
@@ -24,23 +30,13 @@ Analysis_2021/*
 !Analysis_2021/5*.ipynb
 !Analysis_2021/6_Projection_Fadlullah*.ipynb
 !Analysis_2021/6_Projection_Vink.ipynb
+!Analysis_2021/6_Projection_Hou.ipynb
+!Analysis_2021/6_Projection_Hou_stage.ipynb
+!Analysis_2021/6_Projection_Zhu.ipynb
+!Analysis_2021/6_Projection_Thambyrajah.ipynb
 !Analysis_2021/parameters.py
 !Analysis_2021/setup_analysis.sh
 !Analysis_2021/Data/.gitkeep
-
-Analysis_2022/*
-!Analysis_2022/0*.ipynb
-!Analysis_2022/1*.ipynb
-!Analysis_2022/2*.ipynb
-!Analysis_2022/3*.ipynb
-!Analysis_2022/4*.ipynb
-!Analysis_2022/5*.ipynb
-!Analysis_2022/6_Projection_Fadlullah*.ipynb
-!Analysis_2022/6_Projection_Vink.ipynb
-!Analysis_2022/6_Projection_Analysis.ipynb
-!Analysis_2022/parameters.py
-!Analysis_2022/setup_analysis.sh
-!Analysis_2022/Data/.gitkeep
 
 Preprocessing_2021
 Preprocessing_2022

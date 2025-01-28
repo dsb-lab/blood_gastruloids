@@ -13,15 +13,15 @@ Files containing all the analysis of the single cell blood gastruloids.
  - **Analysis_2021/**: Folder containing all the jupyter notebooks with the code of the analysis performed over the **first experiment** as well as the folders storing the plots, tables etc from running the code.
     - All the jupyter notebook in order of execution.
     - **setup_analysis.sh**: Bash file that generates all the folders storing the outcome of an analysis.
- - **Analysis_2022/**: Folder containing all the jupyter notebooks with the code of the analysis performed over the **second experiment** as well as the folders storing the plots, tables etc from running the code.
-    - All the jupyter notebook in order of execution.
-    - **setup_analysis.sh**: Bash file that generates all the folders storing the outcome of an analysis.
  - **Shared_data/**: Folder containing files that are used by different files in both analysis as relevant genes to plot, etc...
     - **Marker_genes_scRNAseq_Gx.csv**: File with a list of genes to plot.
  - **single_cell_tools**: copy of python library containing code that is used during the analysis.
  - **Data_other_studies**: Folder with the data used to compare our cells to other studies. Each subfolder contains an study, the bash file to download the data and a jupyter notebook to convert the raw data in our format.
     - [**Fadlullah**](https://pubmed.ncbi.nlm.nih.gov/32402290/): Iterative Single-Cell Analyses Define the Transcriptome of the First Functional Hematopoietic Stem Cells
     - [**Vink**](https://pubmed.ncbi.nlm.nih.gov/34517413/): Murine AGM single-cell profiling identifies a continuum of hemogenic endothelium differentiation marked by ACE
+    - [**Hou**](https://pubmed.ncbi.nlm.nih.gov/32203131/): Embryonic Endothelial Evolution towards First Hematopoietic Stem Cells Revealed by Single-Cell Transcriptomic and Functional Analyses
+    - [**Zhu**](https://pubmed.ncbi.nlm.nih.gov/32392346/): Developmental trajectory of pre-hematopoietic stem cell formation from endothelium (scRNA-seq data set)
+    - [**Thambyrajah**](https://pubmed.ncbi.nlm.nih.gov/38383534/): Cis inhibition of NOTCH1 through JAGGED1 sustains embryonic hematopoietic stem cell fate
     - **Plots**: Folder where the auxiliar plots from the other datasets are stored.
     - **Tables**: Folder where the auxiliar tables from the other datasets are stored.
 
